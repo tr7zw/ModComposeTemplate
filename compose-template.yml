@@ -1,0 +1,18 @@
+version: '0.0.2'
+defaultReplacements:
+  dependencies: ""
+  licensename: "LICENSE"
+  author: "tr7zw"
+  group: "dev.tr7zw"
+customEntries:
+  - VersionShared/src/main/java/dev/tr7zw/config/CustomConfigScreen.java
+  - VersionShared/src/main/java/dev/tr7zw/donor/DonorProvider.java
+  - VersionShared/src/main/java/dev/tr7zw/donor/DonorSettings.java
+  - VersionShared/src/main/java/dev/tr7zw/donor/DonorSkinProvider.java
+  - VersionShared/src/main/java/dev/tr7zw/donor/ImageLoader.java
+availableFlags:
+  - autopublish
+  - modrinth
+  - curseforge
+  - publishForge
+  - publishFabric
