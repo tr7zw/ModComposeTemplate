@@ -5,11 +5,11 @@ defaultReplacements:
   author: "tr7zw"
   group: "dev.tr7zw"
 customEntries:
-  - VersionShared/src/main/java/dev/tr7zw/config/CustomConfigScreen.java
-  - VersionShared/src/main/java/dev/tr7zw/donor/DonorProvider.java
-  - VersionShared/src/main/java/dev/tr7zw/donor/DonorSettings.java
-  - VersionShared/src/main/java/dev/tr7zw/donor/DonorSkinProvider.java
-  - VersionShared/src/main/java/dev/tr7zw/donor/ImageLoader.java
+  - UtilityCode/src/main/java/dev/tr7zw/config/CustomConfigScreen.java
+  - UtilityCode/src/main/java/dev/tr7zw/donor/DonorProvider.java
+  - UtilityCode/src/main/java/dev/tr7zw/donor/DonorSettings.java
+  - UtilityCode/src/main/java/dev/tr7zw/donor/DonorSkinProvider.java
+  - UtilityCode/src/main/java/dev/tr7zw/donor/ImageLoader.java
 availableFlags:
   - autopublish
   - modrinth
