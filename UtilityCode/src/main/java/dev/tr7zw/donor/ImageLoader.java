@@ -10,7 +10,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.Cleaner;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -184,24 +183,6 @@ public class ImageLoader {
         return frames.toArray(new ImageFrame[frames.size()]);
     }
     
-    private final static Cleaner cleaner = Cleaner.create();
-    
-    private static class State implements Runnable {
-
-        private NativeImage nativeImage;
-        private ResourceLocation resource;
-        
-        State(NativeImage nativeImage, ResourceLocation resource) {
-            this.nativeImage = nativeImage;
-            this.resource = resource;
-        }
-
-        public void run() {
-            nativeImage.close();
-            Minecraft.getInstance().getTextureManager().release(resource);
-        }
-    }
-    
     public static class ImageFrame {
         private final int delay;
         private final BufferedImage image;
@@ -229,10 +210,16 @@ public class ImageLoader {
                 RenderSystem.recordRenderCall(() -> {
                     resource = Minecraft.getInstance().getTextureManager().register(""+image.hashCode(), dyn);
                 });
-                cleaner.register(this, new State(nativeImage, resource));
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+            super.finalize();
+            nativeImage.close();
+            Minecraft.getInstance().getTextureManager().release(resource);
         }
 
         public BufferedImage getImage() {
