@@ -10,9 +10,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.client.OptionInstance;
+import net.minecraft.client.OptionInstance.TooltipSupplier;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Button.OnPress;
 import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -78,9 +80,25 @@ public abstract class CustomConfigScreen extends Screen {
         super.render(poseStack, i, j, f);
     }
 
+    private <T> TooltipSupplier<T>  getOptionalTooltip(String translationKey) {
+        return new TooltipSupplier<T>() {
+
+            @Override
+            public Tooltip apply(T param1t) {
+                String key = translationKey + ".tooltip";
+                Component comp = Component.translatable(key);
+                if(key.equals(comp.getString())) {
+                    return null;
+                } else {
+                    return Tooltip.create(comp);
+                }
+            }
+        };
+    }
+    
     public OptionInstance<Boolean> getBooleanOption(String translationKey, Supplier<Boolean> current,
             Consumer<Boolean> update) {
-        return OptionInstance.createBoolean(translationKey, current.get(), update);
+        return OptionInstance.createBoolean(translationKey, getOptionalTooltip(translationKey), current.get(), update);
     }
 
     public OptionInstance<Boolean> getOnOffOption(String translationKey, Supplier<Boolean> current,
@@ -91,7 +109,7 @@ public abstract class CustomConfigScreen extends Screen {
     public OptionInstance<Double> getDoubleOption(String translationKey, float min, float max, float steps,
             Supplier<Double> current, Consumer<Double> update) {
         Double sliderValue = ((current.get() - min) / (max - min));
-        return new OptionInstance<Double>(translationKey, OptionInstance.noTooltip(), (comp, d) -> {
+        return new OptionInstance<Double>(translationKey, getOptionalTooltip(translationKey), (comp, d) -> {
             double lvt_4_1_ = min + (d * (max - min));
             lvt_4_1_ = (int) (lvt_4_1_ / steps);
             lvt_4_1_ *= steps;
@@ -106,7 +124,7 @@ public abstract class CustomConfigScreen extends Screen {
 
     public OptionInstance<Integer> getIntOption(String translationKey, int min, int max, Supplier<Integer> current,
             Consumer<Integer> update) {
-        return new OptionInstance<Integer>(translationKey, OptionInstance.noTooltip(),
+        return new OptionInstance<Integer>(translationKey, getOptionalTooltip(translationKey),
                 (comp, d) -> comp.copy().append(": " + d), new OptionInstance.IntRange(min, max), current.get(),
                 (d) -> update.accept(d));
     }
@@ -116,7 +134,7 @@ public abstract class CustomConfigScreen extends Screen {
             Supplier<T> current, Consumer<T> update) {
         Map<String, T> mapping = new HashMap<>();
         Arrays.asList(targetEnum.getEnumConstants()).forEach(t -> mapping.put(t.name(), t));
-        return new OptionInstance<T>(translationKey, OptionInstance.noTooltip(),
+        return new OptionInstance<T>(translationKey, getOptionalTooltip(translationKey),
                 (comp, t) -> Component.translatable(translationKey + "." + t.name()),
                 new OptionInstance.Enum<T>(Arrays.asList(targetEnum.getEnumConstants()),
                         Codec.STRING.xmap(s -> mapping.get(s), e -> e.name())),
