@@ -1,7 +1,11 @@
 package dev.tr7zw.config;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -14,10 +18,13 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Button.OnPress;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.components.SliderButton;
+import net.minecraft.client.gui.components.TooltipAccessor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.util.FormattedCharSequence;
 
 public abstract class CustomConfigScreen extends Screen {
 
@@ -80,6 +87,10 @@ public abstract class CustomConfigScreen extends Screen {
         this.renderBackground(poseStack);
         this.list.render(poseStack, i, j, f);
         drawCenteredString(poseStack, this.font, this.title, this.width / 2, 20, 16777215);
+        List<FormattedCharSequence> tooltip = tooltipAt(list, i, j);
+        if(tooltip != null) {
+            renderTooltip(poseStack, tooltip, i, j);
+        }
         super.render(poseStack, i, j, f);
     }
 
@@ -91,7 +102,9 @@ public abstract class CustomConfigScreen extends Screen {
     }
 
     public BooleanOption getBooleanOption(String translationKey, Supplier<Boolean> current, Consumer<Boolean> update) {
-        return new BooleanOption(translationKey, title, (options) -> current.get(), (options, b) -> update.accept(b));
+        BooleanOption option = new BooleanOption(translationKey, title, (options) -> current.get(), (options, b) -> update.accept(b));
+        option.setTooltip(createStaticTooltip(translationKey));
+        return option;
     }
 
     public BooleanOption getOnOffOption(String translationKey, Supplier<Boolean> current, Consumer<Boolean> update) {
@@ -101,9 +114,11 @@ public abstract class CustomConfigScreen extends Screen {
     public ProgressOption getDoubleOption(String translationKey, float min, float max, float steps,
             Supplier<Double> current, Consumer<Double> update) {
         TranslatableComponent comp = new TranslatableComponent(translationKey);
-        return new ProgressOption(translationKey, min, max, steps, (options) -> current.get(),
+        ProgressOption option = new ProgressOption(translationKey, min, max, steps, (options) -> current.get(),
                 (options, val) -> update.accept(val),
                 (options, opt) -> comp.append(new TextComponent(": " + opt.get(options))));
+        option.setTooltip(createStaticTooltip(translationKey));
+        return option;
     }
 
     public ProgressOption getIntOption(String translationKey, float min, float max, Supplier<Integer> current,
@@ -115,15 +130,41 @@ public abstract class CustomConfigScreen extends Screen {
                     update.accept(val.intValue());
                     updateText(option.get());
                 }, (options, opt) -> comp.copy().append(": " + current.get())));
+        option.get().setTooltip(createStaticTooltip(translationKey));
         return option.get();
     }
 
     public <T extends Enum> CycleOption getEnumOption(String translationKey, Class<T> targetEnum, Supplier<T> current,
             Consumer<T> update) {
-        return new CycleOption(translationKey, (options,
+        CycleOption option = new CycleOption(translationKey, (options,
                 integer) -> update.accept(targetEnum.getEnumConstants()[(current.get().ordinal() + integer.intValue())
                         % targetEnum.getEnumConstants().length]),
-                (options, cycleOption) -> new TranslatableComponent(translationKey + "." + current.get().name()));
+                (options, cycleOption) -> {
+                    cycleOption.setTooltip(createStaticTooltip(translationKey));
+                    return new TranslatableComponent(translationKey + "." + current.get().name());
+                    });
+        
+        return option;
+    }
+    
+    public List<FormattedCharSequence> createStaticTooltip(String translationKey) {
+        String key = translationKey + ".tooltip";
+        Component comp = new TranslatableComponent(key);
+        if(key.equals(comp.getString())) {
+            return null;
+        } else {
+            return minecraft.font.split(comp, 170);
+        }
+    }
+    
+    @Nullable
+    public static List<FormattedCharSequence> tooltipAt(OptionsList arg, int i, int j) {
+            Optional<AbstractWidget> optional = arg.getMouseOver(i, j);
+            if (optional.isPresent() && optional.get() instanceof TooltipAccessor) {
+                    Optional<List<FormattedCharSequence>> optional2 = ((TooltipAccessor) optional.get()).getTooltip();
+                    return optional2.orElse(null);
+            }
+            return null;
     }
 
 }
