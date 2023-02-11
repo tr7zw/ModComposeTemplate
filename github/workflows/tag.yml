@@ -33,6 +33,10 @@ $autoworkflowfiles$
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}  
 </curseforge>
           loaders: forge
+          game-versions: |
+            1.19
+            1.19.1
+            1.19.2
           name: ${{github.ref_name}} - Forge
           version-type: beta
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
@@ -44,6 +48,10 @@ $autoworkflowfiles$
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 </modrinth>
           loaders: forge
+          game-versions: |
+            1.19
+            1.19.1
+            1.19.2
           name: ${{github.ref_name}} - Forge
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
 </publishForge>
@@ -60,6 +68,10 @@ $autoworkflowfiles$
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}  
 </curseforge>
           loaders: fabric
+          game-versions: |
+            1.19
+            1.19.1
+            1.19.2
           name: ${{github.ref_name}} - Fabric
           files: '*Fabric/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
 </publishFabric>
