@@ -12,7 +12,14 @@ dependencies {
     sourceSets.main.java.srcDirs += "${project.rootDir}/UtilityCode/src/main/java"
 	sourceSets.main.resources.srcDirs += "${project.rootDir}/UtilityCode/src/main/resources"
 
+	testImplementation "net.fabricmc:fabric-loader-junit:${rootProject.fabric_loader_version}"
+    testImplementation 'org.objenesis:objenesis:3.3'
+
     $dependencies$
+}
+
+test {
+   useJUnitPlatform()
 }
 
 processResources {
