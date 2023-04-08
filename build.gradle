@@ -22,7 +22,7 @@ subprojects {
 
 	shadowJar {
 		configurations = [project.configurations.inc]
-		relocate 'dev.tr7zw.donor', '$relocationpackage$.donor'
+		relocate 'dev.tr7zw.util', '$relocationpackage$.util'
 		relocate 'dev.tr7zw.config', '$relocationpackage$.config'
 	}
 
