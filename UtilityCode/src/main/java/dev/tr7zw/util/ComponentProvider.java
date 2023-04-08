@@ -2,6 +2,8 @@ package dev.tr7zw.util;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 /**
  * Utility class to get Components, for better bridging between 1.19+ and pre 1.19
@@ -11,20 +13,20 @@ import net.minecraft.network.chat.MutableComponent;
  */
 public class ComponentProvider {
 
-    public static MutableComponent literal(String string) {
-        return Component.literal(string);
+    public static Component literal(String string) {
+        return new TextComponent(string);
     }
 
-    public static MutableComponent translatable(String string) {
-        return Component.translatable(string);
+    public static Component translatable(String string) {
+        return new TranslatableComponent(string);
     }
 
-    public static MutableComponent translatable(String string, Object... objects) {
-        return Component.translatable(string, objects);
+    public static Component translatable(String string, Object... objects) {
+        return new TranslatableComponent(string, objects);
     }
 
-    public static MutableComponent empty() {
-        return Component.empty();
+    public static Component empty() {
+        return TextComponent.EMPTY;
     }
 
 }
