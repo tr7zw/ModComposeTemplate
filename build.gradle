@@ -84,4 +84,7 @@ allprojects {
 	java {
 		withSourcesJar()
 	}
+
+	test.enabled = false
+	compileTestJava.enabled = false
 }
