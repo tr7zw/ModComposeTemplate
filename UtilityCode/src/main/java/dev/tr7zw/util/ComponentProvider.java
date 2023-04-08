@@ -1,7 +1,6 @@
 package dev.tr7zw.util;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 
@@ -13,15 +12,15 @@ import net.minecraft.network.chat.TranslatableComponent;
  */
 public class ComponentProvider {
 
-    public static Component literal(String string) {
+    public static TextComponent literal(String string) {
         return new TextComponent(string);
     }
 
-    public static Component translatable(String string) {
+    public static TranslatableComponent translatable(String string) {
         return new TranslatableComponent(string);
     }
 
-    public static Component translatable(String string, Object... objects) {
+    public static TranslatableComponent translatable(String string, Object... objects) {
         return new TranslatableComponent(string, objects);
     }
 
