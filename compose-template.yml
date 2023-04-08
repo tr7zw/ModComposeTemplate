@@ -6,10 +6,7 @@ defaultReplacements:
   group: "dev.tr7zw"
 customEntries:
   - UtilityCode/src/main/java/dev/tr7zw/config/CustomConfigScreen.java
-  - UtilityCode/src/main/java/dev/tr7zw/donor/DonorProvider.java
-  - UtilityCode/src/main/java/dev/tr7zw/donor/DonorSettings.java
-  - UtilityCode/src/main/java/dev/tr7zw/donor/DonorSkinProvider.java
-  - UtilityCode/src/main/java/dev/tr7zw/donor/ImageLoader.java
+  - UtilityCode/src/main/java/dev/tr7zw/util/ComponentProvider.java
 availableFlags:
   - autopublish
   - modrinth
