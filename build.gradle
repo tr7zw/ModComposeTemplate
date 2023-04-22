@@ -15,7 +15,7 @@ subprojects {
 			defaultRefmapName = "$id$.refmap.mixins.json"
 		}
 		<accesswidener>
-        accessWidenerPath = file("Shared/src/main/resources/$id$.accesswidener")
+        accessWidenerPath = file("../Shared/src/main/resources/$id$.accesswidener")
 		</accesswidener>
 	}
 
