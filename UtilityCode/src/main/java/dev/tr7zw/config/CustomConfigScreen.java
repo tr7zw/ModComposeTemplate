@@ -8,12 +8,14 @@ import java.util.function.Supplier;
 
 import com.mojang.serialization.Codec;
 
+import net.minecraft.Util;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.OptionInstance.TooltipSupplier;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Button.OnPress;
 import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.components.PlainTextButton;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
@@ -71,6 +73,13 @@ public abstract class CustomConfigScreen extends Screen {
                 CustomConfigScreen.this.resize(minecraft, width, height); // refresh
             }
         }).pos(this.width / 2 + 110, this.height - 27).size(60, 20).build());
+        
+        this.addRenderableWidget(new PlainTextButton(5, 5, 400, 20, Component.literal("Enjoying the mod? Consider supporting the developer!"), new OnPress() {
+            @Override
+            public void onPress(Button button) {
+                Util.getPlatform().openUri("https://tr7zw.dev/donate/");
+            }
+        }, minecraft.font));
     }
 
     public void render(GuiGraphics guiGraphics, int i, int j, float f) {
