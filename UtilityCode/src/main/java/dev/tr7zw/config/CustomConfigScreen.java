@@ -88,6 +88,12 @@ public abstract class CustomConfigScreen extends Screen {
         guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 16777215);
     }
 
+    @Override
+    public void renderTransparentBackground(GuiGraphics guiGraphics) {
+        // we always want the dirt background
+        renderDirtBackground(guiGraphics);
+    }
+
     private <T> TooltipSupplier<T>  getOptionalTooltip(String translationKey) {
         return new TooltipSupplier<T>() {
 
