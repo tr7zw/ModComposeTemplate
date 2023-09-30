@@ -1,0 +1,5 @@
+archivesBaseName = rootProject.archives_base_name + "-versionless"
+
+dependencies {
+    $dependencies$
+}
