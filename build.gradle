@@ -5,38 +5,40 @@ plugins {
 }
 
 subprojects {
-	apply plugin: "dev.architectury.loom"
-	//apply plugin: "fabric-loom"
-	apply plugin: 'com.github.johnrengelman.shadow'
+	if (!project.name.toLowerCase().contains("versionless")) {
+		apply plugin: "dev.architectury.loom"
+		//apply plugin: "fabric-loom"
+		apply plugin: 'com.github.johnrengelman.shadow'
 
-	loom {
-		mixin {
-			defaultRefmapName = "$id$.refmap.mixins.json"
+		loom {
+			mixin {
+				defaultRefmapName = "$id$.refmap.mixins.json"
+			}
 		}
-	}
 
-	configurations {
-		inc
-		implementation.extendsFrom inc
-	}
+		configurations {
+			inc
+			implementation.extendsFrom inc
+		}
 
-	shadowJar {
-		configurations = [project.configurations.inc]
-		relocate 'dev.tr7zw.donor', '$relocationpackage$.donor'
-		relocate 'dev.tr7zw.config', '$relocationpackage$.config'
-	}
+		shadowJar {
+			configurations = [project.configurations.inc]
+			relocate 'dev.tr7zw.donor', '$relocationpackage$.donor'
+			relocate 'dev.tr7zw.config', '$relocationpackage$.config'
+		}
 
-	remapJar {
-		dependsOn(shadowJar)
-		input = shadowJar.archiveFile
-	}
+		remapJar {
+			dependsOn(shadowJar)
+			input = shadowJar.archiveFile
+		}
 
-	dependencies {
-		minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-		mappings loom.officialMojangMappings()
+		dependencies {
+			minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+			mappings loom.officialMojangMappings()
 
-		$dependencies$
+			$dependencies$
 
+		}
 	}
 }
 
