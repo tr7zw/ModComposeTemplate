@@ -1,8 +1,23 @@
 name: Create Release
 
-on:
-  release:
-    types: [published]
+on: 
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Tag Name'
+        required: true
+      target:
+        description: 'What to release'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+        - all
+        <publishFabric>- fabric</publishFabric>
+        <publishForge>- forge</publishForge>
+      changelog:
+        description: 'Changelog'
+        required: true
 
 jobs:
   build:
@@ -18,13 +33,28 @@ jobs:
         run: chmod +x ./gradlecw
       - name: build
         run: ./gradlecw build
+  GithubRelease:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Save Changelog
+        run: echo "$LOG" > CHANGELOG.txt
+        env:
+          LOG: ${{ inputs.changelog }}
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
+          name: ${{ inputs.name }}
+          tag_name: ${{ inputs.name }}
+          body_path: CHANGELOG.txt
+          generate_release_notes: true
           files: |
 $autoworkflowfiles$
 <autopublish>
 <publishForge>
+  ForgeRelease:
+    if: inputs.target == 'forge' || inputs.target == 'all'
+    runs-on: ubuntu-latest
+    steps:
       - name: Publish-Forge-Curseforge
         uses: Kir-Antipov/mc-publish@v3.2
         with:
@@ -33,7 +63,8 @@ $autoworkflowfiles$
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}  
 </curseforge>
           loaders: forge
-          name: ${{github.ref_name}} - Forge
+          name: ${{inputs.name}} - Forge
+          github-tag: ${{inputs.name}}
           version-type: beta
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
       - name: Publish-Forge-Modrinth
@@ -44,10 +75,14 @@ $autoworkflowfiles$
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
 </modrinth>
           loaders: forge
-          name: ${{github.ref_name}} - Forge
+          name: ${{inputs.name}} - Forge
+          github-tag: ${{inputs.name}}
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
 </publishForge>
 <publishFabric>
+  FabricRelease:
+    if: inputs.target == 'fabric' || inputs.target == 'all'
+    runs-on: ubuntu-latest
       - name: Publish-Fabric
         uses: Kir-Antipov/mc-publish@v3.2
         with:
@@ -60,7 +95,8 @@ $autoworkflowfiles$
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}  
 </curseforge>
           loaders: fabric
-          name: ${{github.ref_name}} - Fabric
+          name: ${{inputs.name}} - Fabric
+          github-tag: ${{inputs.name}}
           files: '*Fabric/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
 </publishFabric>
 </autopublish>
