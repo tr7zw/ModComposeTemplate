@@ -46,6 +46,18 @@ jobs:
           generate_release_notes: true
           files: |
 $autoworkflowfiles$
+
+
+#      - name: Get release
+#        id: get_release
+#        uses: bruceadams/get-release@v1.3.2
+#        env:
+#          GITHUB_TOKEN: ${{ github.token }}
+#      - name: Update Changelog
+#        run: rm CHANGELOG.txt && echo "$LOG" > CHANGELOG.txt
+#        env:
+#          LOG: ${{ steps.get_release.outputs.body }}
+
 <autopublish>
 <publishForge>
       - name: Publish-Forge-Curseforge
@@ -58,7 +70,7 @@ $autoworkflowfiles$
 </curseforge>
           loaders: forge
           name: ${{inputs.name}} - Forge
-          github-tag: ${{inputs.name}}
+          changelog-file: CHANGELOG.txt
           version-type: beta
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
       - name: Publish-Forge-Modrinth
@@ -70,7 +82,7 @@ $autoworkflowfiles$
 </modrinth>
           loaders: forge
           name: ${{inputs.name}} - Forge
-          github-tag: ${{inputs.name}}
+          changelog-file: CHANGELOG.txt
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
 </publishForge>
 <publishFabric>
@@ -88,7 +100,7 @@ $autoworkflowfiles$
 </curseforge>
           loaders: fabric
           name: ${{inputs.name}} - Fabric
-          github-tag: ${{inputs.name}}
+          changelog-file: CHANGELOG.txt
           files: '*Fabric/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
 </publishFabric>
 </autopublish>
