@@ -1,5 +1,9 @@
 archivesBaseName = rootProject.archives_base_name + "-forge"
 
+repositories {
+    maven { url "https://maven.neoforged.net/releases/" }
+}
+
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 
