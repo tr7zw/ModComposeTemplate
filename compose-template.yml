@@ -13,5 +13,6 @@ availableFlags:
   - curseforge
   - publishForge
   - publishFabric
+  - publishNeo
   - accesswidener
   - versionless

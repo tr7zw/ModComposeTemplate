@@ -24,6 +24,29 @@ jobs:
           files: |
 $autoworkflowfiles$
 <autopublish>
+<publishNeo>
+      - name: Publish-Neo-Curseforge
+        uses: Kir-Antipov/mc-publish@v3.2
+        with:
+<curseforge>
+          curseforge-id: $curseforgeid$
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}  
+</curseforge>
+          loaders: neoforge
+          name: ${{github.ref_name}} - NeoForge
+          version-type: beta
+          files: '*Neo/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
+      - name: Publish-Neo-Modrinth
+        uses: Kir-Antipov/mc-publish@v3.2
+        with:
+<modrinth>
+          modrinth-id: $modrinthid$
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+</modrinth>
+          loaders: neoforge
+          name: ${{github.ref_name}} - NeoForge
+          files: '*Neo/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
+</publishNeo>
 <publishForge>
       - name: Publish-Forge-Curseforge
         uses: Kir-Antipov/mc-publish@v3.2
