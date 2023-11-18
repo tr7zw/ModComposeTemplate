@@ -12,9 +12,6 @@ subprojects {
 		apply plugin: 'com.github.johnrengelman.shadow'
 
 		loom {
-			mixin {
-				defaultRefmapName = "$id$.refmap.mixins.json"
-			}
 			<accesswidener>
 			accessWidenerPath = file("../Shared/src/main/resources/$id$.accesswidener")
 			</accesswidener>
