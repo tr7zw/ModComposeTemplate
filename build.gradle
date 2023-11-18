@@ -33,6 +33,33 @@ subprojects {
 			input = shadowJar.archiveFile
 		}
 
+		processResources {
+			duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
+			var replaceProperties = [
+					minecraft_version   : minecraft_version, minecraft_version_range_forge: minecraft_version_range_forge,
+					neoforge_version         : neoforge_version, neo_version_range: neo_version_range,
+					minecraft_version_range_fabric: minecraft_version_range_fabric,
+					loader_version_range_neoforge: loader_version_range_neoforge,
+					loader_version_range_forge: loader_version_range_forge,
+					description		 : "$description$",
+					homepage_url		 : "$homepageUrl$",
+					sources_url		 : "$sourcesUrl$",
+					issues_url		 : "$issuesUrl$",
+					license_name: "$licenseName$",
+					mod_id              : "$id$", mod_name: "$name$", version: "$version$",
+					mod_author         : "$author$", pack_format_number: pack_format_number,
+			]
+			inputs.properties replaceProperties
+
+			filesMatching(['fabric.mod.json', 'META-INF/mods.toml', 'pack.mcmeta']) {
+				expand replaceProperties + [project: project]
+			}
+
+			from "${project.rootDir}/$licensename$"
+
+		}
+
 		dependencies {
 			minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
 			mappings loom.layered() {

@@ -1,9 +1,5 @@
 archivesBaseName = rootProject.archives_base_name + "-forge"
 
-repositories {
-    maven { url "https://maven.neoforged.net/releases/" }
-}
-
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
 
@@ -14,16 +10,6 @@ dependencies {
 	sourceSets.main.resources.srcDirs += "${project.rootDir}/UtilityCode/src/main/resources"
 
     $dependencies$
-}
-
-processResources {
-    inputs.property "version", project.version
-
-    from "${project.rootDir}/$licensename$"
-
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
-    }
 }
 
 loom {

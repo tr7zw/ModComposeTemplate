@@ -12,16 +12,6 @@ dependencies {
     $dependencies$
 }
 
-processResources {
-    inputs.property "version", project.version
-
-    from "${project.rootDir}/$licensename$"
-
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
-    }
-}
-
 jar {
     manifest {
         attributes([
