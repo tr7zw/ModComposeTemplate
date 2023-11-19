@@ -2,6 +2,7 @@ plugins {
 	id "dev.architectury.loom" version "1.4-SNAPSHOT" apply false
 	//id "fabric-loom" version "0.10-SNAPSHOT" apply false
 	id 'com.github.johnrengelman.shadow' version '7.1.2' apply false
+	id "com.diffplug.spotless" version "6.22.0" apply false
 }
 
 subprojects {
@@ -127,4 +128,35 @@ allprojects {
 	java {
 		withSourcesJar()
 	}
+
+
 }
+
+apply plugin: "com.diffplug.spotless"
+
+spotless {
+	java {
+		target '**/*.java'
+		eclipse().configFile("${project.rootDir}/formatter.xml")
+	}
+	format 'misc', {
+		target '**/*.gitattributes', '**/*.gitignore', '**/*.toml'
+
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	yaml {
+		target '**/*.yaml'
+		jackson()
+	}
+	json {
+		target '**/*.json' 
+		gson()
+	}
+	flexmark {
+		target '**/*.md'
+		flexmark()
+	}
+}
+
+compileJava.dependsOn 'spotlessApply'
