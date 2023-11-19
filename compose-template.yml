@@ -12,6 +12,7 @@ defaultReplacements:
 customEntries:
   - UtilityCode/src/main/java/dev/tr7zw/config/CustomConfigScreen.java
   - UtilityCode/src/main/java/dev/tr7zw/util/ComponentProvider.java
+  - formatter.xml
 availableFlags:
   - autopublish
   - modrinth
