@@ -68,6 +68,12 @@ subprojects {
 				parchment("org.parchmentmc.data:parchment-${rootProject.parchment_mc_version}:${rootProject.parchment_version}@zip")
 			}
 
+			compileOnly 'org.projectlombok:lombok:1.18.30'
+			annotationProcessor 'org.projectlombok:lombok:1.18.30'
+			
+			testCompileOnly 'org.projectlombok:lombok:1.18.30'
+			testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
 			$dependencies$
 
 		}
