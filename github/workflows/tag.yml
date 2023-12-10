@@ -36,6 +36,7 @@ $autoworkflowfiles$
           name: ${{github.ref_name}} - NeoForge
           version-type: beta
           files: '*Neo/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
+          game-versions: $targetVersions$
       - name: Publish-Neo-Modrinth
         uses: Kir-Antipov/mc-publish@v3.2
         with:
@@ -46,6 +47,7 @@ $autoworkflowfiles$
           loaders: neoforge
           name: ${{github.ref_name}} - NeoForge
           files: '*Neo/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
+          game-versions: $targetVersions$
 </publishNeo>
 <publishForge>
       - name: Publish-Forge-Curseforge
@@ -59,6 +61,7 @@ $autoworkflowfiles$
           name: ${{github.ref_name}} - Forge
           version-type: beta
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
+          game-versions: $targetVersions$
       - name: Publish-Forge-Modrinth
         uses: Kir-Antipov/mc-publish@v3.2
         with:
@@ -69,6 +72,7 @@ $autoworkflowfiles$
           loaders: forge
           name: ${{github.ref_name}} - Forge
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
+          game-versions: $targetVersions$
 </publishForge>
 <publishFabric>
       - name: Publish-Fabric
@@ -85,5 +89,6 @@ $autoworkflowfiles$
           loaders: fabric
           name: ${{github.ref_name}} - Fabric
           files: '*Fabric/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
+          game-versions: $targetVersions$
 </publishFabric>
 </autopublish>
