@@ -13,6 +13,7 @@ subprojects {
 		apply plugin: 'com.github.johnrengelman.shadow'
 
 		loom {
+			silentMojangMappingsLicense()
 			<accesswidener>
 			accessWidenerPath = file("../Shared/src/main/resources/$id$.accesswidener")
 			</accesswidener>
@@ -32,6 +33,11 @@ subprojects {
 		remapJar {
 			dependsOn(shadowJar)
 			input = shadowJar.archiveFile
+
+			doLast {
+				// Delete the shadowJar.archiveFile after remapJar task is executed
+				delete shadowJar.archiveFile
+			}
 		}
 
 		processResources {
@@ -132,7 +138,7 @@ allprojects {
 	}
 
 	java {
-		withSourcesJar()
+		//withSourcesJar()
 	}
 
 
