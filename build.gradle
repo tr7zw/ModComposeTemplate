@@ -3,6 +3,10 @@ plugins {
 	//id "fabric-loom" version "0.10-SNAPSHOT" apply false
 	id 'com.github.johnrengelman.shadow' version '7.1.2' apply false
 	id "com.diffplug.spotless" version "6.22.0" apply false
+	
+    // This dependency is only used to determine the state of the Git working tree so that build artifacts can be
+    // more easily identified. This setup is copied from sodium
+    id 'org.ajoberstar.grgit' version '5.2.0'
 }
 
 subprojects {
@@ -54,7 +58,7 @@ subprojects {
 					sources_url		 : "$sourcesUrl$",
 					issues_url		 : "$issuesUrl$",
 					license_name: "$licenseName$",
-					mod_id              : "$id$", mod_name: "$name$", version: "$version$",
+					mod_id              : "$id$", mod_name: "$name$", version: "$version$${getVersionMetadata()}",
 					mod_author         : "$author$", pack_format_number: pack_format_number,
 			]
 			inputs.properties replaceProperties
@@ -91,7 +95,7 @@ allprojects {
 	apply plugin: "maven-publish"
 
 	archivesBaseName = rootProject.archives_base_name
-	version = rootProject.mod_version + "-mc" + rootProject.minecraft_version
+	version = rootProject.mod_version + "-mc" + rootProject.minecraft_version + getVersionMetadata()
 	group = rootProject.maven_group
 
 	repositories {
@@ -172,3 +176,25 @@ spotless {
 }
 
 compileJava.dependsOn 'spotlessApply'
+
+def getVersionMetadata() {
+    // CI builds only
+    if (project.hasProperty("build.release")) {
+        return "" // no tag whatsoever
+    }
+
+    if (grgit != null) {
+        def head = grgit.head()
+        def id = head.abbreviatedId
+
+        // Flag the build if the build tree is not clean
+        if (!grgit.status().clean) {
+            id += "-dirty"
+        }
+
+        return "+git.${id}"
+    }
+
+    // No tracking information could be found about the build
+    return "+unknown"
+}
