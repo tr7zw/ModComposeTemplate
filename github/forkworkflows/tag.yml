@@ -25,7 +25,7 @@ jobs:
         run: chmod +x ./gradlecw
       - name: build
         working-directory: ./workspace
-        run: ./gradlecw build
+        run: ./gradlecw build -Pbuild.release=true
       - name: capture build artifacts
         uses: actions/upload-artifact@v2
         with:

@@ -4,14 +4,22 @@ defaultReplacements:
   licensename: "LICENSE"
   author: "tr7zw"
   group: "dev.tr7zw"
+  licenseName: "tr7zw Protective License"
+  description: "Allan, please add details!"
+  homepageUrl: "https://github.com/tr7zw"
+  sourcesUrl: "https://github.com/tr7zw"
+  issuesUrl: "https://github.com/tr7zw"
+  targetVersions: "1.20.2"
 customEntries:
   - UtilityCode/src/main/java/dev/tr7zw/config/CustomConfigScreen.java
   - UtilityCode/src/main/java/dev/tr7zw/util/ComponentProvider.java
+  - formatter.xml
 availableFlags:
   - autopublish
   - modrinth
   - curseforge
   - publishForge
   - publishFabric
+  - publishNeo
   - accesswidener
   - versionless

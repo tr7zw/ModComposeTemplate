@@ -21,15 +21,3 @@ dependencies {
 test {
    useJUnitPlatform()
 }
-
-processResources {
-	duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
-	inputs.property "version", project.version
-
-    from "${project.rootDir}/$licensename$"
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
-    }
-
-}

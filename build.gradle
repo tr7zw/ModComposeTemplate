@@ -1,7 +1,12 @@
 plugins {
-	id "dev.architectury.loom" version "1.3-SNAPSHOT" apply false
+	id "dev.architectury.loom" version "1.4-SNAPSHOT" apply false
 	//id "fabric-loom" version "0.10-SNAPSHOT" apply false
 	id 'com.github.johnrengelman.shadow' version '7.1.2' apply false
+	id "com.diffplug.spotless" version "6.22.0" apply false
+	
+    // This dependency is only used to determine the state of the Git working tree so that build artifacts can be
+    // more easily identified. This setup is copied from sodium
+    id 'org.ajoberstar.grgit' version '5.2.0'
 }
 
 subprojects {
@@ -12,9 +17,7 @@ subprojects {
 		apply plugin: 'com.github.johnrengelman.shadow'
 
 		loom {
-			mixin {
-				defaultRefmapName = "$id$.refmap.mixins.json"
-			}
+			silentMojangMappingsLicense()
 			<accesswidener>
 			accessWidenerPath = file("../Shared/src/main/resources/$id$.accesswidener")
 			</accesswidener>
@@ -34,6 +37,38 @@ subprojects {
 		remapJar {
 			dependsOn(shadowJar)
 			input = shadowJar.archiveFile
+
+			doLast {
+				// Delete the shadowJar.archiveFile after remapJar task is executed
+				delete shadowJar.archiveFile
+			}
+		}
+
+		processResources {
+			duplicatesStrategy(DuplicatesStrategy.EXCLUDE)
+
+			var replaceProperties = [
+					minecraft_version   : minecraft_version, minecraft_version_range_forge: minecraft_version_range_forge,
+					neoforge_version         : neoforge_version, neo_version_range: neo_version_range,
+					minecraft_version_range_fabric: minecraft_version_range_fabric,
+					loader_version_range_neoforge: loader_version_range_neoforge,
+					loader_version_range_forge: loader_version_range_forge,
+					description		 : "$description$",
+					homepage_url		 : "$homepageUrl$",
+					sources_url		 : "$sourcesUrl$",
+					issues_url		 : "$issuesUrl$",
+					license_name: "$licenseName$",
+					mod_id              : "$id$", mod_name: "$name$", version: "$version$${getVersionMetadata()}",
+					mod_author         : "$author$", pack_format_number: pack_format_number,
+			]
+			inputs.properties replaceProperties
+
+			filesMatching(['fabric.mod.json', 'META-INF/mods.toml', 'pack.mcmeta']) {
+				expand replaceProperties + [project: project]
+			}
+
+			from "${project.rootDir}/$licensename$"
+
 		}
 
 		dependencies {
@@ -43,9 +78,28 @@ subprojects {
 				parchment("org.parchmentmc.data:parchment-${rootProject.parchment_mc_version}:${rootProject.parchment_version}@zip")
 			}
 
+			compileOnly 'org.projectlombok:lombok:1.18.30'
+			annotationProcessor 'org.projectlombok:lombok:1.18.30'
+			
+			testCompileOnly 'org.projectlombok:lombok:1.18.30'
+			testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+
 			$dependencies$
 
 		}
+
+		afterEvaluate { project ->
+			project.tasks.withType(JavaExec) { task ->
+				if (task.name.startsWith("runClient")) {
+					task.doFirst {
+						def binDir = project.file('bin')
+						if (binDir.exists()) {
+							deleteBinDir(binDir)
+						}
+					}
+				}
+			}
+    	}
 	}
 }
 
@@ -54,7 +108,7 @@ allprojects {
 	apply plugin: "maven-publish"
 
 	archivesBaseName = rootProject.archives_base_name
-	version = rootProject.mod_version + "-mc" + rootProject.minecraft_version
+	version = rootProject.mod_version + "-mc" + rootProject.minecraft_version + getVersionMetadata()
 	group = rootProject.maven_group
 
 	repositories {
@@ -101,6 +155,64 @@ allprojects {
 	}
 
 	java {
-		withSourcesJar()
+		//withSourcesJar()
 	}
+
+
+}
+
+apply plugin: "com.diffplug.spotless"
+
+spotless {
+	java {
+		target '**/*.java'
+		eclipse().configFile("${project.rootDir}/formatter.xml")
+	}
+	format 'misc', {
+		target '**/*.gitattributes', '**/*.gitignore', '**/*.toml'
+
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	yaml {
+		target '**/*.yaml'
+		jackson()
+	}
+	json {
+		target '**/*.json' 
+		gson()
+	}
+	flexmark {
+		target '**/*.md'
+		flexmark()
+	}
+}
+
+compileJava.dependsOn 'spotlessApply'
+
+def getVersionMetadata() {
+    // CI builds only
+    if (project.hasProperty("build.release")) {
+        return "" // no tag whatsoever
+    }
+
+    if (grgit != null) {
+        def head = grgit.head()
+        def id = head.abbreviatedId
+
+        // Flag the build if the build tree is not clean
+        if (!grgit.status().clean) {
+            id += "-dirty"
+        }
+
+        return "+git.${id}"
+    }
+
+    // No tracking information could be found about the build
+    return "+unknown"
+}
+
+// Function to delete bin directory recursively
+def deleteBinDir(dir) {
+    ant.delete(dir: dir, failonerror: false)
 }

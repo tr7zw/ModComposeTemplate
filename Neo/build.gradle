@@ -1,7 +1,7 @@
-archivesBaseName = rootProject.archives_base_name + "-forge"
+archivesBaseName = rootProject.archives_base_name + "-neoforge"
 
 dependencies {
-    forge "net.neoforged:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
+    neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
 
     sourceSets.main.java.srcDirs += "${project.rootDir}/Shared/src/main/java"
 	sourceSets.main.resources.srcDirs += "${project.rootDir}/Shared/src/main/resources"
@@ -10,20 +10,6 @@ dependencies {
 	sourceSets.main.resources.srcDirs += "${project.rootDir}/UtilityCode/src/main/resources"
 
     $dependencies$
-}
-
-processResources {
-    inputs.property "version", project.version
-
-    from "${project.rootDir}/$licensename$"
-
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
-    }
-}
-
-loom {
-    forge.mixinConfigs "${modid}.mixins.json"
 }
 
 jar {
