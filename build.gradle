@@ -87,6 +87,19 @@ subprojects {
 			$dependencies$
 
 		}
+
+		afterEvaluate { project ->
+			project.tasks.withType(JavaExec) { task ->
+				if (task.name.startsWith("runClient")) {
+					task.doFirst {
+						def binDir = project.file('bin')
+						if (binDir.exists()) {
+							deleteBinDir(binDir)
+						}
+					}
+				}
+			}
+    	}
 	}
 }
 
@@ -197,4 +210,9 @@ def getVersionMetadata() {
 
     // No tracking information could be found about the build
     return "+unknown"
+}
+
+// Function to delete bin directory recursively
+def deleteBinDir(dir) {
+    ant.delete(dir: dir, failonerror: false)
 }
