@@ -46,7 +46,7 @@ public abstract class CustomConfigScreen extends Screen {
     }
 
     protected void init() {
-        this.list = new OptionsList(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
+        this.list = new OptionsList(this.minecraft, this.width, this.height - 64, 32, 25);
         this.addWidget(this.list);
         this.createFooter();
         initialize();
