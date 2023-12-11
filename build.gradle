@@ -17,6 +17,10 @@ subprojects {
 		apply plugin: 'com.github.johnrengelman.shadow'
 
 		loom {
+			mixin {
+				useLegacyMixinAp = true
+				defaultRefmapName = "$id$.refmap.mixins.json"
+			}
 			silentMojangMappingsLicense()
 			<accesswidener>
 			accessWidenerPath = file("../Shared/src/main/resources/$id$.accesswidener")
