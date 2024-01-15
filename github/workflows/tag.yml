@@ -26,7 +26,7 @@ $autoworkflowfiles$
 <autopublish>
 <publishNeo>
       - name: Publish-Neo-Curseforge
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3.0
         with:
 <curseforge>
           curseforge-id: $curseforgeid$
@@ -38,7 +38,7 @@ $autoworkflowfiles$
           files: '*Neo/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
           game-versions: $targetVersions$
       - name: Publish-Neo-Modrinth
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3.0
         with:
 <modrinth>
           modrinth-id: $modrinthid$
@@ -51,7 +51,7 @@ $autoworkflowfiles$
 </publishNeo>
 <publishForge>
       - name: Publish-Forge-Curseforge
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3.0
         with:
 <curseforge>
           curseforge-id: $curseforgeid$
@@ -63,7 +63,7 @@ $autoworkflowfiles$
           files: '*Forge/build/libs/!(*-@(dev|sources|javadoc|all)).jar'
           game-versions: $targetVersions$
       - name: Publish-Forge-Modrinth
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3.0
         with:
 <modrinth>
           modrinth-id: $modrinthid$
@@ -76,7 +76,7 @@ $autoworkflowfiles$
 </publishForge>
 <publishFabric>
       - name: Publish-Fabric
-        uses: Kir-Antipov/mc-publish@v3.2
+        uses: Kir-Antipov/mc-publish@v3.3.0
         with:
 <modrinth>
           modrinth-id: $modrinthid$
